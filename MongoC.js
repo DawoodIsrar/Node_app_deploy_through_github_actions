@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
-const password = encodeURIComponent(process.env.MONGO_PASSWORD.trim());
-const connectionString = `mongodb+srv://integrationninjas:${password}@devcluster.xf2gcci.mongodb.net/?retryWrites=true&w=majority`; // clustore url
+const password = encodeURIComponent(process.env.MONGO_PASS.trim());
+const connectionString = `mongodb+srv://dawoodops:${password}@devcluster.xf2gcci.mongodb.net/?retryWrites=true&w=majority`; // clustore url
 const client = new MongoClient(connectionString);
 let conn;
 try {
@@ -10,5 +10,5 @@ try {
 } catch(e) {
   console.error(e);
 }
-let db = conn.db("integration_ninjas");
+let db = conn.db("MernDb");
 export default db;
