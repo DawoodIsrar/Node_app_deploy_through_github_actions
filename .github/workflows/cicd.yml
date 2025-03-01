@@ -17,7 +17,7 @@ jobs:
           echo "DOCKER_NAME=${{ secrets.DOCKER_NAME }}"
           echo "DOCKER_PASS length: ${#DOCKER_PASS}"
         env: 
-          DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+          DOCKER_PASS: ${{ secrets.DOCKER_PASS }}  
 
       - name: Login to Docker Hub
         run: |
