@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import db from "./mongoC.js";
+import db from "./MongoC.js";
 
 const port = 4000;
 const app = express();
