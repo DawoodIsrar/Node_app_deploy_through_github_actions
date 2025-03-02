@@ -26,9 +26,6 @@ jobs:
             echo "✅ DOCKER_PASS is set"; 
           fi
 
-      - name: Logout to Clear Credentials
-        run: docker logout || true
-
       - name: Login to Docker Hub (Use PAT)
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
@@ -50,10 +47,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Logout to Clear Credentials
-        run: docker logout || true
+      - name: Ensure Docker is Installed & Running
+        run: |
+          if ! command -v docker &> /dev/null; then
+            echo "❌ ERROR: Docker is not installed"; exit 1;
+          fi
+          systemctl is-active --quiet docker || sudo systemctl start docker
+          docker version
+          docker ps
 
-      - name: Login to Docker Hub (Use PAT)
+      - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
       - name: Pull Image from Docker Hub
