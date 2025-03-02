@@ -15,36 +15,43 @@ jobs:
       - name: Debug Secrets (DO NOT PRINT PASSWORDS)
         run: |
           echo "Checking Secrets..."
-          
           if [ -z "${{ secrets.DOCKER_NAME }}" ]; then 
             echo "ERROR: DOCKER_NAME is empty"; exit 1; 
           else 
             echo "DOCKER_NAME is set"; 
           fi
-
           if [ -z "${{ secrets.DOCKER_PASS }}" ]; then 
             echo "ERROR: DOCKER_PASS is empty"; exit 1; 
           else 
             echo "DOCKER_PASS is set"; 
           fi
 
-      - name: Login to Docker Hub
+      - name: Logout to Clear Credentials
+        run: docker logout || true
+
+      - name: Login to Docker Hub (Use PAT)
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t integrationninjas/nodejs-app .
+        run: docker build -t engrdawoodisrar/nodejs-app:latest .
 
       - name: Publish Image to Docker Hub
-        run: docker push integrationninjas/nodejs-app:latest
+        run: docker push engrdawoodisrar/nodejs-app:latest
 
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Pull Image from Docker Hub
-        run: docker pull integrationninjas/nodejs-app:latest
+      - name: Logout to Ensure Fresh Login
+        run: docker logout || true
 
-      - name: Delete Old Container (if exists)
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
+
+      - name: Pull Image from Docker Hub
+        run: docker pull engrdawoodisrar/nodejs-app:latest
+
+      - name: Stop and Remove Old Container (if exists)
         run: |
           docker stop nodejs-app-container || true
           docker rm nodejs-app-container || true
@@ -54,4 +61,4 @@ jobs:
           docker run -d -p 4000:4000 \
             --name nodejs-app-container \
             -e MONGO_PASSWORD="${{ secrets.MONGO_PASS }}" \
-            integrationninjas/nodejs-app:latest
+            engrdawoodisrar/nodejs-app:latest
