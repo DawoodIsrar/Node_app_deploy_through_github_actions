@@ -16,14 +16,14 @@ jobs:
         run: |
           echo "Checking Secrets..."
           if [ -z "${{ secrets.DOCKER_NAME }}" ]; then 
-            echo "ERROR: DOCKER_NAME is empty"; exit 1; 
+            echo "❌ ERROR: DOCKER_NAME is empty"; exit 1; 
           else 
-            echo "DOCKER_NAME is set"; 
+            echo "✅ DOCKER_NAME is set"; 
           fi
           if [ -z "${{ secrets.DOCKER_PASS }}" ]; then 
-            echo "ERROR: DOCKER_PASS is empty"; exit 1; 
+            echo "❌ ERROR: DOCKER_PASS is empty"; exit 1; 
           else 
-            echo "DOCKER_PASS is set"; 
+            echo "✅ DOCKER_PASS is set"; 
           fi
 
       - name: Logout to Clear Credentials
@@ -41,11 +41,21 @@ jobs:
   deploy:
     needs: build
     runs-on: self-hosted
-    steps:
-      - name: Logout to Ensure Fresh Login
-        run: docker logout || true
+    env:
+      DOCKER_NAME: ${{ secrets.DOCKER_NAME }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+      MONGO_PASS: ${{ secrets.MONGO_PASS }}
 
-      - name: Login to Docker Hub
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Ensure Docker is Accessible
+        run: |
+          docker version
+          docker ps
+
+      - name: Login to Docker Hub (Fresh Session)
         run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
       - name: Pull Image from Docker Hub
