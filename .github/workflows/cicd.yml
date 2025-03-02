@@ -16,7 +16,7 @@ jobs:
           if [[ -z "${{ secrets.DOCKER_PASS }}" ]]; then 
             echo "ERROR: DOCKER_PASS is empty"; exit 1; 
           else 
-            echo "DOCKER_PASS is set"; 
+            echo "DOCKER_PASS is set";     
           fi
 
   deploy:
