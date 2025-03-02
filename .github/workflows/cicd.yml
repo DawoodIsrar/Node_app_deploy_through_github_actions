@@ -12,7 +12,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Debug Secrets (DO NOT PRINT PASSWORDS)   
+      - name: Debug Secrets (DO NOT PRINT PASSWORDS)
         run: |
           if [[ -z "${{ secrets.DOCKER_NAME }}" ]]; then 
             echo "ERROR: DOCKER_NAME is empty"; exit 1; 
@@ -40,12 +40,14 @@ jobs:
   deploy:
     needs: build
     runs-on: self-hosted
-    env:
-      DOCKER_NAME: ${{ secrets.DOCKER_NAME }}
-      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
-      MONGO_PASS: ${{ secrets.MONGO_PASS }}
 
     steps:
+      - name: Force Environment Variables
+        run: |
+          echo "DOCKER_NAME=${{ secrets.DOCKER_NAME }}" >> $GITHUB_ENV
+          echo "DOCKER_PASS=${{ secrets.DOCKER_PASS }}" >> $GITHUB_ENV
+          echo "MONGO_PASS=${{ secrets.MONGO_PASS }}" >> $GITHUB_ENV
+
       - name: Debug Environment Variables on Self-Hosted Runner
         run: |
           echo "Checking if DOCKER_NAME is set: $DOCKER_NAME"
