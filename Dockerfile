@@ -1,21 +1,23 @@
-# Use Node Alpine image
+# Use Node.js Alpine base image
 FROM node:alpine3.18
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
+# Copy package.json first
+COPY package.json ./
+
+# Check if package-lock.json exists before copying
+COPY package-lock.json ./ || true
+
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the project files
+# Copy the rest of the application files
 COPY . .
 
-# Ensure that .env is included (GitHub Actions must mount it)
-RUN ls -la /app
-
-# Expose the app port
+# Expose the application port
 EXPOSE 4000
 
-# Run the application
-CMD [ "npm", "run", "start" ]
+# Start the application
+CMD ["npm", "run", "start"]
