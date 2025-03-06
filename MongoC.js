@@ -14,7 +14,7 @@ if (!password) {
   throw new Error("MONGO_PASS is missing. Check your .env file or environment variables!");
 }
 
-const connectionString = `mongodb+srv://dawoodops:${password}@merndb.7tl0l.mongodb.net/?retryWrites=true&w=majority&appName=MernDb`;
+const connectionString = `mongodb+srv://dawoodops:<${password}>@merndb.7tl0l.mongodb.net/?retryWrites=true&w=majority&appName=MernDb`;
 
 const client = new MongoClient(connectionString);
 let conn;
