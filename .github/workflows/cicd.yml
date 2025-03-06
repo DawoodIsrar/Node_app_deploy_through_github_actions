@@ -74,5 +74,5 @@ jobs:
         run: |
           docker run -d -p 4000:4000 \
             --name nodejs-app-container \
-            -e MONGO_PASSWORD="${{ secrets.MONGO_PASS }}" \
+            -e MONGO_PASSW="${{ secrets.MONGO_PASS }}" \
             engrdawoodisrar/nodejs-app:latest
