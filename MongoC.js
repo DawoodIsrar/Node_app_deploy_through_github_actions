@@ -15,7 +15,7 @@ if (!password) {
 }
 
 const connectionString = `mongodb+srv://DawoodOps:${password}@merndb.7tl0l.mongodb.net/?retryWrites=true&w=majority&appName=MernDb`;
-
+    
 const client = new MongoClient(connectionString);
 let conn;
 
